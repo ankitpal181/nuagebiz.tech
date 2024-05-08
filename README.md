@@ -5,7 +5,10 @@ Setup:
 - clone the repo
 - activate venv
 - or create a new venv and install all the dependencies from requirements.txt
-- now run migrations, which will create default admin user for us
+- now run migrations using "python3 manage.py migrate", which will create default admin user for us
+- add "127.0.0.1     ams.nuagebiz.tech" to /etc/hosts file
+- run server using "python3 manage.py runserver"
+
 
 APIs (description) (method) (url):
 
