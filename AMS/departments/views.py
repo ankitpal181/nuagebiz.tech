@@ -29,7 +29,9 @@ class DepartmentView(APIView):
         try:
             # Fetch department data and apply required filters
             departments = Departments.objects
-            filtered_response = DepartmentFilters(queryset=departments).qs
+            filtered_response = DepartmentFilters(
+                data=request.query_params, queryset=departments
+            ).qs
 
             # Return serialized response
             serialized_response = DepartmentSerializer(filtered_response, many=True)
@@ -155,7 +157,7 @@ class CourseView(APIView):
         try:
             # Fetch course data and apply required filters
             courses = Courses.objects
-            filtered_response = CourseFilters(queryset=courses).qs
+            filtered_response = CourseFilters(data=request.query_params, queryset=courses).qs
 
             # Return serialized response
             serialized_response = CourseSerializer(filtered_response, many=True)

@@ -29,7 +29,7 @@ class UserView(APIView):
         try:
             # Fetch user data and apply required filters
             users = Users.objects
-            filtered_response = UserFilters(queryset=users).qs
+            filtered_response = UserFilters(data=request.query_params, queryset=users).qs
 
             # Return serialized response
             serialized_response = UserSerializer(filtered_response, many=True)
@@ -155,7 +155,7 @@ class StudentView(APIView):
         try:
             # Fetch student data and apply required filters
             students = Students.objects
-            filtered_response = StudentFilters(queryset=students).qs
+            filtered_response = StudentFilters(data=request.query_params, queryset=students).qs
 
             # Return serialized response
             serialized_response = StudentSerializer(filtered_response, many=True)

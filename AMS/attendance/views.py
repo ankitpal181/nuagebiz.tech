@@ -29,7 +29,9 @@ class AttendanceView(APIView):
         try:
             # Fetch attendance data and apply required filters
             attendance = AttendanceLog.objects
-            filtered_response = AttendanceFilters(queryset=attendance).qs
+            filtered_response = AttendanceFilters(
+                data=request.query_params, queryset=attendance
+            ).qs
 
             # Return serialized response
             serialized_response = AttendanceSerializer(filtered_response, many=True)
