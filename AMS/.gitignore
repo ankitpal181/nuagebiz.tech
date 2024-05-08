@@ -1,3 +1,4 @@
 venv
 error_logs.txt
 db.sqlite3
+__pycache__
