@@ -1,9 +1,0 @@
-2024-05-08 10:43:33.026261 users:user type object 'Users' has no attribute 'object'
-2024-05-08 10:43:34.935562 users:user type object 'Users' has no attribute 'object'
-2024-05-08 10:43:36.767123 users:user type object 'Users' has no attribute 'object'
-2024-05-08 10:59:00.585142 users:user type object 'Users' has no attribute 'object'
-2024-05-08 10:59:04.121443 users:user type object 'Users' has no attribute 'object'
-2024-05-08 11:49:38.182160 users:user No such user exists
-2024-05-08 11:55:02.044195 users:user ('No such user exists', 'custom')
-2024-05-08 11:55:18.300139 users:user ('No such user exists', 'custom')
-2024-05-08 11:55:19.265603 users:user ('No such user exists', 'custom')

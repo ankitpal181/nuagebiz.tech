@@ -1,11 +1,9 @@
-from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from attendance.models import AttendanceLog
 from attendance.filters import AttendanceFilters
 from attendance.serializers import AttendanceSerializer
-from AMS.serializers import FailureSerializer
-from AMS.utilities import Logger
+from AMS.utilities import Logger, handle_view_exceptions
 
 
 # Create your views here.
@@ -37,24 +35,7 @@ class AttendanceView(APIView):
             serialized_response = AttendanceSerializer(filtered_response, many=True)
             return Response(serialized_response.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "attendance:attendance"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "attendance:attendance")
 
     def post(self, request) -> AttendanceLog:
         """Add a new attendance in database.
@@ -74,24 +55,7 @@ class AttendanceView(APIView):
             # Return serialized response
             return Response(new_attendance.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "attendance:attendance"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "attendance:attendance")
 
     def put(self, request, id: int) -> AttendanceLog:
         """Update attendance's details in database.
@@ -117,21 +81,4 @@ class AttendanceView(APIView):
             # Return serialized response
             return Response(updated_attendance.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "attendance:attendance"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "attendance:attendance")

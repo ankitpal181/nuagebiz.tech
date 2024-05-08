@@ -1,11 +1,9 @@
-from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from attendance.models import Departments, Courses
 from departments.filters import DepartmentFilters, CourseFilters
 from departments.serializers import DepartmentSerializer, CourseSerializer
-from AMS.serializers import FailureSerializer
-from AMS.utilities import Logger
+from AMS.utilities import Logger, handle_view_exceptions
 
 
 # Create your views here.
@@ -37,24 +35,7 @@ class DepartmentView(APIView):
             serialized_response = DepartmentSerializer(filtered_response, many=True)
             return Response(serialized_response.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "departments:department"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "departments:department")
 
     def post(self, request) -> Departments:
         """Add a new department in database.
@@ -74,24 +55,7 @@ class DepartmentView(APIView):
             # Return serialized response
             return Response(new_department.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "departments:department"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "departments:department")
 
     def put(self, request, id: int) -> Departments:
         """Update department's details in database.
@@ -117,24 +81,7 @@ class DepartmentView(APIView):
             # Return serialized response
             return Response(updated_department.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "departments:department"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "departments:department")
 
 
 class CourseView(APIView):
@@ -163,24 +110,7 @@ class CourseView(APIView):
             serialized_response = CourseSerializer(filtered_response, many=True)
             return Response(serialized_response.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "departments:course"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "departments:course")
 
     def post(self, request) -> Courses:
         """Add a new course in database.
@@ -200,24 +130,7 @@ class CourseView(APIView):
             # Return serialized response
             return Response(new_course.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "departments:course"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "departments:course")
 
     def put(self, request, id: int) -> Courses:
         """Update course's details in database.
@@ -243,21 +156,4 @@ class CourseView(APIView):
             # Return serialized response
             return Response(updated_course.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "departments:course"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "departments:course")

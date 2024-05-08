@@ -1,11 +1,9 @@
-from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from attendance.models import Users, Students
 from users.filters import UserFilters, StudentFilters
 from users.serializers import UserSerializer, StudentSerializer
-from AMS.serializers import FailureSerializer
-from AMS.utilities import Logger
+from AMS.utilities import Logger, handle_view_exceptions
 
 
 # Create your views here.
@@ -28,31 +26,14 @@ class UserView(APIView):
         """
         try:
             # Fetch user data and apply required filters
-            users = Users.objects
+            users = Users.object
             filtered_response = UserFilters(data=request.query_params, queryset=users).qs
 
             # Return serialized response
             serialized_response = UserSerializer(filtered_response, many=True)
             return Response(serialized_response.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "users:user"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "users:user")
 
     def post(self, request) -> Users:
         """Add a new user in database.
@@ -72,24 +53,7 @@ class UserView(APIView):
             # Return serialized response
             return Response(new_user.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "users:user"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "users:user")
 
     def put(self, request, id: int) -> Users:
         """Update user's details in database.
@@ -115,24 +79,7 @@ class UserView(APIView):
             # Return serialized response
             return Response(updated_user.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "users:user"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "users:user")
 
 
 class StudentView(APIView):
@@ -161,24 +108,7 @@ class StudentView(APIView):
             serialized_response = StudentSerializer(filtered_response, many=True)
             return Response(serialized_response.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "users:student"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "users:student")
 
     def post(self, request) -> Students:
         """Add a new student in database.
@@ -198,24 +128,7 @@ class StudentView(APIView):
             # Return serialized response
             return Response(new_student.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "users:student"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "users:student")
 
     def put(self, request, id: int) -> Students:
         """Update student's details in database.
@@ -241,21 +154,4 @@ class StudentView(APIView):
             # Return serialized response
             return Response(updated_student.data)
         except Exception as ex:
-            # Prepare serialized failure response
-            message = "Something went wrong, try again"
-
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                message = ex.args[0]
-
-            failure_response = FailureSerializer(data={
-                "status": 500,
-                "message": message,
-                "error_code": "users:student"
-            })
-
-            # Mark log entry and return failure response
-            if len(ex.args) > 1 and ex.args[1] == "custom":
-                self.logger.log(datetime.now(), str(ex))
-
-            failure_response.is_valid()
-            return Response(failure_response.data)
+            return handle_view_exceptions(self, ex, "users:student")
