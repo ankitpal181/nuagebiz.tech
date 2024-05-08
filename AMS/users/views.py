@@ -26,7 +26,7 @@ class UserView(APIView):
         """
         try:
             # Fetch user data and apply required filters
-            users = Users.object
+            users = Users.objects
             filtered_response = UserFilters(data=request.query_params, queryset=users).qs
 
             # Return serialized response
